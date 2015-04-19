@@ -20,7 +20,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
@@ -39,11 +38,13 @@ public class BolaoResource {
     private UsuarioRemote usuarioejb;
     @EJB
     private CampeonatoRemote campeonatoejb;
+  
 
     /**
      * Creates a new instance of UsuarioResource
      */
     public BolaoResource() {
+        
     }
 
     @POST
@@ -88,18 +89,18 @@ public class BolaoResource {
         return campeonatoejb.buscarPorDatainicioStatus(datacomeco, datafim, status);
 
     }
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_XML)
+    @Produces("application/xml")
     @Path("/campeonato/nome/{nome}")
-    public List<Campeonato> buscarPorNome(@PathParam("nome") String nome){
-        return campeonatoejb.buscarPorNome(nome);
+    public List<Campeonato> buscarPorNome(@PathParam("nome") String nome) {
+        return  campeonatoejb.buscarPorNome(nome);
     }
-    
+
     @GET
-    @Produces (MediaType.APPLICATION_XML)
+    @Produces("application/xml")
     @Path("/campeonato/status/{status}")
-    public List<Campeonato> buscarPorStatus(@PathParam("status") String status){
+    public List<Campeonato> buscarPorStatus(@PathParam("status") String status) {
         return campeonatoejb.buscarPorStatus(status);
     }
 
