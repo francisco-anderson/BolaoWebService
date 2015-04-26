@@ -9,6 +9,7 @@ import com.bm.bolaoservice.ejb.CampeonatoRemote;
 import com.bm.bolaoservice.ejb.UsuarioRemote;
 import com.bm.bolaoservice.entity.Campeonato;
 import com.bm.bolaoservice.entity.Usuario;
+import com.thoughtworks.xstream.XStream;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -38,6 +39,8 @@ public class BolaoResource {
     private UsuarioRemote usuarioejb;
     @EJB
     private CampeonatoRemote campeonatoejb;
+    
+    private final XStream xStream;
   
 
     /**
@@ -45,15 +48,17 @@ public class BolaoResource {
      */
     public BolaoResource() {
         
+        xStream = new XStream();
+        
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     @Path("/login")
-    public Usuario realizarLogin(Usuario usuario) {
+    public String realizarLogin(Usuario usuario) {
         //TODO return proper representation object
-        return usuarioejb.consultarLogin(usuario.getEmail(), usuario.getSenha());
+        return xStream.toXML(usuarioejb.consultarLogin(usuario.getEmail(), usuario.getSenha()));
 
     }
 
@@ -74,34 +79,41 @@ public class BolaoResource {
     @GET
     @Produces(MediaType.APPLICATION_XML)
     @Path("/campeonato/id/{id}")
-    public Campeonato buscarCampeonatoPorId(@PathParam("id") Long id) {
-        return campeonatoejb.consultaPorId(id);
+    public String buscarCampeonatoPorId(@PathParam("id") Long id) {
+        return xStream.toXML(campeonatoejb.consultaPorId(id));
     }
 
     @POST
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/campeonato/buscarporDataInicioStatus/")
-    public List<Campeonato> buscarPorDataInicioStatus(@FormParam("datacomeco") Date datacomeco,
+    public String buscarPorDataInicioStatus(@FormParam("datacomeco") Date datacomeco,
             @FormParam("datafim") Date datafim,
             @FormParam("status") String status) {
 
-        return campeonatoejb.buscarPorDatainicioStatus(datacomeco, datafim, status);
+        return xStream.toXML(campeonatoejb.buscarPorDatainicioStatus(datacomeco, datafim, status));
 
     }
 
     @GET
     @Produces("application/xml")
     @Path("/campeonato/nome/{nome}")
-    public List<Campeonato> buscarPorNome(@PathParam("nome") String nome) {
-        return  campeonatoejb.buscarPorNome(nome);
+    public String buscarPorNome(@PathParam("nome") String nome) {
+        return  xStream.toXML(campeonatoejb.buscarPorNome(nome));
     }
 
     @GET
     @Produces("application/xml")
     @Path("/campeonato/status/{status}")
-    public List<Campeonato> buscarPorStatus(@PathParam("status") String status) {
-        return campeonatoejb.buscarPorStatus(status);
+    public String buscarPorStatus(@PathParam("status") String status) {
+        return xStream.toXML(campeonatoejb.buscarPorStatus(status));
+    }
+    
+    @GET
+    @Produces("application/xml")
+    @Path("campeonato/equipe/{idcampeonato}")
+    public String buscarEquipePorCampeonato(@PathParam("idcampeonato")Long id){
+        return xStream.toXML(campeonatoejb.buscarEquipesPorCampeonato(id));
     }
 
 }
