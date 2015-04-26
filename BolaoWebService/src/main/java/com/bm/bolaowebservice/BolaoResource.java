@@ -56,8 +56,9 @@ public class BolaoResource {
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     @Path("/login")
-    public String realizarLogin(Usuario usuario) {
+    public String realizarLogin(String user) {
         //TODO return proper representation object
+        Usuario usuario = (Usuario) xStream.fromXML(user);
         return xStream.toXML(usuarioejb.consultarLogin(usuario.getEmail(), usuario.getSenha()));
 
     }
@@ -66,7 +67,9 @@ public class BolaoResource {
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/novoUsuario")
-    public String cadastrarUsuario(Usuario usuario) {
+    public String cadastrarUsuario(String user) {
+        
+        Usuario usuario = (Usuario)xStream.fromXML(user);
 
         usuario = usuarioejb.novoUsuario(usuario);
         if (usuario == null) {
