@@ -56,7 +56,7 @@ public class UsuarioResource {
     @PUT
     @Consumes    
     public void salvarUsuario(String user) {
-        
+       
         ejb.salvar((Usuario) xStream.fromXML(user));
         
     }

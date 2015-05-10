@@ -30,9 +30,13 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.bm.bolaowebservice.ApostaResource.class);
+        resources.add(com.bm.bolaowebservice.ApostaResultadoResource.class);
         resources.add(com.bm.bolaowebservice.CampeonatoResource.class);
         resources.add(com.bm.bolaowebservice.EquipeResource.class);
+        resources.add(com.bm.bolaowebservice.PartidaResource.class);
+        resources.add(com.bm.bolaowebservice.PontuacaoEquipeResource.class);
         resources.add(com.bm.bolaowebservice.PontuacaoUsuarioResource.class);
+        resources.add(com.bm.bolaowebservice.ResultadoResource.class);
         resources.add(com.bm.bolaowebservice.UsuarioResource.class);
     }
     

@@ -13,6 +13,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -48,6 +49,13 @@ public class PontuacaoUsuarioResource {
         Usuario usuario = (Usuario) xStream.fromXML(user);
         List<PontuacaoUsuario> pontuacaoUsuarios = ejb.buscarPorUsuario(usuario);
         return xStream.toXML(pontuacaoUsuarios);
+    }
+    
+    @PUT
+    @Consumes(MediaType.APPLICATION_XML)
+    public void atualizar(String p){
+        PontuacaoUsuario pontuacaoUsuario = (PontuacaoUsuario)xStream.fromXML(p);
+        ejb.salvar(pontuacaoUsuario);
     }
 
 }

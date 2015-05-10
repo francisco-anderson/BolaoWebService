@@ -13,9 +13,9 @@ import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -89,6 +89,13 @@ public class CampeonatoResource {
     public String buscarPorStatus(@PathParam("status") String status) {
 
         return xStream.toXML(ejb.buscarPorStatus(status));
+    }
+    
+    @PUT
+    @Consumes(MediaType.APPLICATION_XML)
+    public void atualizar(String c){
+        Campeonato campeonato = (Campeonato) xStream.fromXML(c);
+        ejb.salvar(campeonato);
     }
 
 }

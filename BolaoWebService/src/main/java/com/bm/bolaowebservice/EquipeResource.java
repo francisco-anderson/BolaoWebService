@@ -14,6 +14,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -56,8 +57,34 @@ public class EquipeResource {
     @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("campeonato/{idcampeonato}")
     public String buscarEquipePorCampeonato(@PathParam("idcampeonato") Long id) {
-
         return xStream.toXML(ejb.buscarEquipesPorCampeonato(id));
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_XML)
+    public void atualizar(String e) {
+        Equipe equipe = (Equipe) xStream.fromXML(e);
+        ejb.salvar(equipe);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Path("pontuacao/{idUsuario}/{idCampeonato}/{tipo}")
+    public String buscarPorPontuacaoGrupo(@PathParam("idUsuario") Long idUsuario,
+            @PathParam("idCampeonato") Long idCampeonato,
+            @PathParam("tipo") String tipo) {
+
+        List<Equipe> e = ejb.buscarEquipePorPontuacaoGrupo(idUsuario, idCampeonato, tipo);
+        return xStream.toXML(e);
+    }
+    
+    
+    @GET
+    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Path("{id}")
+    public String buscarPorId(@PathParam("id")Long id){
+        
+        return xStream.toXML(ejb.buscarPorId(id));
     }
 
 }

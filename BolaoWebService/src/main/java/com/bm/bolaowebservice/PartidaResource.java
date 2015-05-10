@@ -5,16 +5,17 @@
  */
 package com.bm.bolaowebservice;
 
-import com.bm.bolaoservice.ejb.ApostaRemote;
-import com.bm.bolaoservice.entity.Aposta;
+import com.bm.bolaoservice.ejb.PartidaRemote;
+import com.bm.bolaoservice.entity.Partida;
 import com.bm.bolaoservice.entity.Usuario;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -24,36 +25,44 @@ import javax.ws.rs.core.UriInfo;
  *
  * @author Anderson
  */
-@Path("aposta")
-public class ApostaResource {
-
+@Path("partida")
+public class PartidaResource {
+    
     @Context
     private UriInfo context;
+    
     @EJB
-    private ApostaRemote ejb;
-
+    private PartidaRemote ejb;
+    
     private XStream xStream;
-
-    public ApostaResource() {
+    
+    public PartidaResource(){
         xStream = new XStream();
         xStream.processAnnotations(Usuario.class);
     }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_XML)
+    
+    @GET
     @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
-    @Path("/usuario")
-    public String buscarApostasUsuario(String user) {
-        Usuario usuario = (Usuario) xStream.fromXML(user);
-        List<Aposta> apostas = ejb.buscarPorUsuario(usuario);
-        return xStream.toXML(apostas);
+    @Path("{id}")
+    public String buscarPartida(@PathParam("id")Long id){
+        
+        return xStream.toXML(ejb.buscarPartidaPorId(id));
+       
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Path("/campeonato/{id}")
+    public String buscarPorCampeonato(@PathParam("id")Long id){
+        List<Partida> p = ejb.buscarPorCampeonato(id);
+        return xStream.toXML(p);
     }
     
     @PUT
     @Consumes(MediaType.APPLICATION_XML)
-    public void salvar(String a){
-        Aposta aposta = (Aposta)xStream.fromXML(a);
-        ejb.salvar(aposta);        
+    public void atualizar(String partida){
+        Partida p = (Partida)xStream.fromXML(partida);
+        ejb.salvar(p);
     }
-
+    
 }
