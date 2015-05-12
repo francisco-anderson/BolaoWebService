@@ -23,7 +23,7 @@ import javax.ws.rs.core.UriInfo;
  *
  * @author Anderson
  */
-@Path("apostaequipepartida")
+@Path("apostaresultado")
 public class ApostaResultadoResource {
 
     @Context
