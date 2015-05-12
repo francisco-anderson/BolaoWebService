@@ -8,7 +8,6 @@ package com.bm.bolaowebservice;
 import com.bm.bolaoservice.ejb.PontuacaoUsuarioRemote;
 import com.bm.bolaoservice.entity.PontuacaoUsuario;
 import com.bm.bolaoservice.entity.Usuario;
-import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -32,29 +31,21 @@ public class PontuacaoUsuarioResource {
     @EJB
     private PontuacaoUsuarioRemote ejb;
 
-    private XStream xStream;
-
     public PontuacaoUsuarioResource() {
-
-        xStream = new XStream();
-        xStream.processAnnotations(Usuario.class);
 
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("/usuario")
-    public String buscarPontuacaoUsuario(String user) {
-        Usuario usuario = (Usuario) xStream.fromXML(user);
-        List<PontuacaoUsuario> pontuacaoUsuarios = ejb.buscarPorUsuario(usuario);
-        return xStream.toXML(pontuacaoUsuarios);
+    public List<PontuacaoUsuario> buscarPontuacaoUsuario(Usuario usuario) {
+        return ejb.buscarPorUsuario(usuario);
     }
-    
+
     @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void atualizar(String p){
-        PontuacaoUsuario pontuacaoUsuario = (PontuacaoUsuario)xStream.fromXML(p);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void atualizar(PontuacaoUsuario pontuacaoUsuario) {
         ejb.salvar(pontuacaoUsuario);
     }
 

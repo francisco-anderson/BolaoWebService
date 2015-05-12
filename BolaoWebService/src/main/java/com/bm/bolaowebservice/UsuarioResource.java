@@ -7,7 +7,6 @@ package com.bm.bolaowebservice;
 
 import com.bm.bolaoservice.ejb.UsuarioRemote;
 import com.bm.bolaoservice.entity.Usuario;
-import com.thoughtworks.xstream.XStream;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -24,50 +23,40 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("usuario")
 public class UsuarioResource {
-    
+
     @Context
     private UriInfo context;
     @EJB
     private UsuarioRemote ejb;
-    
-    
-    private XStream xStream;
-    
-    
-    public UsuarioResource(){
-        
-        xStream = new XStream();
-        xStream.processAnnotations(Usuario.class);
-        
+
+    public UsuarioResource() {
+
     }
-    
+
     @POST
-    @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/login")
-    public String realizarLogin(String user) {             
-        
-        Usuario usuario = (Usuario) xStream.fromXML(user);
-        return xStream.toXML(ejb.consultarLogin(usuario.getEmail(), usuario.getSenha()));
-        
+    public Usuario realizarLogin(Usuario usuario) {
+
+        return ejb.consultarLogin(usuario.getEmail(), usuario.getSenha());
+
     }
 
-    
     @PUT
-    @Consumes    
-    public void salvarUsuario(String user) {
-       
-        ejb.salvar((Usuario) xStream.fromXML(user));
-        
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void salvarUsuario(Usuario user) {
+
+        ejb.salvar(user);
+
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/novoUsuario")
-    public String cadastrarUsuario(String user) {
-
-        Usuario usuario = (Usuario) xStream.fromXML(user);
+    public String cadastrarUsuario(Usuario usuario) {
+      
         usuario = ejb.novoUsuario(usuario);
         if (usuario == null) {
             return "E-mail Ja Cadastrado";
@@ -75,5 +64,5 @@ public class UsuarioResource {
         return "OK";
 
     }
-    
+
 }

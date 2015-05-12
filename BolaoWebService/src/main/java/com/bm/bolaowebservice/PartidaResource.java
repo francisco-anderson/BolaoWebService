@@ -7,8 +7,6 @@ package com.bm.bolaowebservice;
 
 import com.bm.bolaoservice.ejb.PartidaRemote;
 import com.bm.bolaoservice.entity.Partida;
-import com.bm.bolaoservice.entity.Usuario;
-import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -27,42 +25,37 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("partida")
 public class PartidaResource {
-    
+
     @Context
     private UriInfo context;
-    
+
     @EJB
     private PartidaRemote ejb;
-    
-    private XStream xStream;
-    
-    public PartidaResource(){
-        xStream = new XStream();
-        xStream.processAnnotations(Usuario.class);
+
+    public PartidaResource() {
+
     }
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("{id}")
-    public String buscarPartida(@PathParam("id")Long id){
-        
-        return xStream.toXML(ejb.buscarPartidaPorId(id));
-       
+    public Partida buscarPartida(@PathParam("id") Long id) {
+
+        return (ejb.buscarPartidaPorId(id));
+
     }
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("/campeonato/{id}")
-    public String buscarPorCampeonato(@PathParam("id")Long id){
-        List<Partida> p = ejb.buscarPorCampeonato(id);
-        return xStream.toXML(p);
+    public List<Partida> buscarPorCampeonato(@PathParam("id") Long id) {
+        return ejb.buscarPorCampeonato(id);
     }
-    
+
     @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void atualizar(String partida){
-        Partida p = (Partida)xStream.fromXML(partida);
-        ejb.salvar(p);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void atualizar(Partida partida) {
+        ejb.salvar(partida);
     }
-    
+
 }

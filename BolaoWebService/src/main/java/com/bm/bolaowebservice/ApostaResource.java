@@ -8,7 +8,6 @@ package com.bm.bolaowebservice;
 import com.bm.bolaoservice.ejb.ApostaRemote;
 import com.bm.bolaoservice.entity.Aposta;
 import com.bm.bolaoservice.entity.Usuario;
-import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -32,28 +31,22 @@ public class ApostaResource {
     @EJB
     private ApostaRemote ejb;
 
-    private XStream xStream;
-
     public ApostaResource() {
-        xStream = new XStream();
-        xStream.processAnnotations(Usuario.class);
+
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("/usuario")
-    public String buscarApostasUsuario(String user) {
-        Usuario usuario = (Usuario) xStream.fromXML(user);
-        List<Aposta> apostas = ejb.buscarPorUsuario(usuario);
-        return xStream.toXML(apostas);
+    public List<Aposta> buscarApostasUsuario(Usuario usuario) {
+        return ejb.buscarPorUsuario(usuario);
     }
-    
+
     @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void salvar(String a){
-        Aposta aposta = (Aposta)xStream.fromXML(a);
-        ejb.salvar(aposta);        
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void salvar(Aposta aposta) {
+        ejb.salvar(aposta);
     }
 
 }

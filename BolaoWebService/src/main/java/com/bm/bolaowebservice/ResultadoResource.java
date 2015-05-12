@@ -7,8 +7,7 @@ package com.bm.bolaowebservice;
 
 import com.bm.bolaoservice.ejb.ResultadoRemote;
 import com.bm.bolaoservice.entity.Resultado;
-import com.bm.bolaoservice.entity.Usuario;
-import com.thoughtworks.xstream.XStream;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -26,46 +25,42 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("equipepartida")
 public class ResultadoResource {
-    
+
     @Context
     private UriInfo context;
-    
+
     @EJB
     private ResultadoRemote ejb;
-    
-    private XStream xStream;
-    
-    public ResultadoResource(){
-        xStream = new XStream();
-        xStream.processAnnotations(Usuario.class);
+
+    public ResultadoResource() {
+
     }
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("equipe/{idEquipe}/partida/{idPartida}")
-    public String buscarPorId(@PathParam("idEquipe")Long idEquipe,@PathParam("idPartida")Long idPartida){
-        return xStream.toXML(ejb.buscarPorId(idEquipe, idPartida));
+    public Resultado buscarPorId(@PathParam("idEquipe") Long idEquipe, @PathParam("idPartida") Long idPartida) {
+        return (ejb.buscarPorId(idEquipe, idPartida));
     }
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("equipe/{id}")
-    public String buscarPorEquipe(@PathParam("id")Long id){
-        return xStream.toXML(ejb.buscarPorEquipe(id));
+    public List<Resultado> buscarPorEquipe(@PathParam("id") Long id) {
+        return (ejb.buscarPorEquipe(id));
     }
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("partida/{id}")
-    public String buscarPorPartida(@PathParam("id")Long id){
-        return xStream.toXML(ejb.buscarPorPartida(id));
+    public List<Resultado> buscarPorPartida(@PathParam("id") Long id) {
+        return (ejb.buscarPorPartida(id));
     }
-    
+
     @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void atualizar(String equipePartida){
-        Resultado ep = (Resultado) xStream.fromXML(equipePartida);
-        ejb.salvar(ep);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void atualizar(Resultado resultado) {
+        ejb.salvar(resultado);
     }
-    
+
 }

@@ -7,8 +7,7 @@ package com.bm.bolaowebservice;
 
 import com.bm.bolaoservice.ejb.PontuacaoEquipeRemote;
 import com.bm.bolaoservice.entity.PontuacaoEquipe;
-import com.bm.bolaoservice.entity.Usuario;
-import com.thoughtworks.xstream.XStream;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -26,48 +25,44 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("pontuacaoequipe")
 public class PontuacaoEquipeResource {
-    
+
     @Context
     private UriInfo context;
-    
+
     @EJB
     private PontuacaoEquipeRemote ejb;
-    
-    private XStream xStream;
-    
-    public PontuacaoEquipeResource(){
-        xStream = new XStream();
-        xStream.processAnnotations(Usuario.class);
+
+    public PontuacaoEquipeResource() {
+
     }
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("equipe/{id}")
-    public String buscarPorEquipe(@PathParam("id")Long id){
-        
-        return xStream.toXML(ejb.buscarPorEquipe(id));
-        
+    public List<PontuacaoEquipe> buscarPorEquipe(@PathParam("id") Long id) {
+
+        return (ejb.buscarPorEquipe(id));
+
     }
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("campeonato/{id}")
-    public String buscarPorCampeonato(@PathParam("id")Long id){
-        return xStream.toXML(ejb.buscarPorCampeonato(id));
+    public List<PontuacaoEquipe> buscarPorCampeonato(@PathParam("id") Long id) {
+        return (ejb.buscarPorCampeonato(id));
     }
-    
+
     @GET
-    @Produces(MediaType.APPLICATION_XML + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("equipe/{idEquipe}/campeonato/{idCampeonato}")
-    public String buscarPorEquipeCampeonato(@PathParam("idEquipe")Long idEquipe,@PathParam("idCampeonato") Long idCampeonato){
-        return xStream.toXML(ejb.buscarPorCampeonatoEquipe(idCampeonato, idEquipe));
+    public PontuacaoEquipe buscarPorEquipeCampeonato(@PathParam("idEquipe") Long idEquipe, @PathParam("idCampeonato") Long idCampeonato) {
+        return (ejb.buscarPorCampeonatoEquipe(idCampeonato, idEquipe));
     }
-    
+
     @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void atualizar(String pontuacaoEquipe){
-        PontuacaoEquipe pe = (PontuacaoEquipe) xStream.fromXML(pontuacaoEquipe);
-        ejb.salvar(pe);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void atualizar(PontuacaoEquipe pontuacaoEquipe) {
+        ejb.salvar(pontuacaoEquipe);
     }
-    
+
 }
