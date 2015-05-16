@@ -37,8 +37,8 @@ public class UsuarioResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/login")
-    public Usuario realizarLogin(Usuario usuario) {
-
+    public Usuario realizarLogin(Usuario usuario) {    
+             
         return ejb.consultarLogin(usuario.getEmail(), usuario.getSenha());
 
     }

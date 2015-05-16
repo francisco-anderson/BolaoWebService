@@ -43,7 +43,7 @@ public class CampeonatoResource {
     @Produces(MediaType.APPLICATION_JSON + ";" + MediaType.CHARSET_PARAMETER + "=UTF-8")
     @Path("/usuario")
     public List<Campeonato> buscarCampeonatosUsuario(Usuario usuario) {
-
+        
         return ejb.buscarPorUsuario(usuario);
 
     }
