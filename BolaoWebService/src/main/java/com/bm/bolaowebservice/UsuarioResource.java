@@ -37,8 +37,8 @@ public class UsuarioResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/login")
-    public Usuario realizarLogin(Usuario usuario) {    
-             
+    public Usuario realizarLogin(Usuario usuario) {
+
         return ejb.consultarLogin(usuario.getEmail(), usuario.getSenha());
 
     }
@@ -56,13 +56,15 @@ public class UsuarioResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/novoUsuario")
     public String cadastrarUsuario(Usuario usuario) {
-      
-        usuario = ejb.novoUsuario(usuario);
-        if (usuario == null) {
-            return "E-mail Ja Cadastrado";
-        }
-        return "OK";
+        return ejb.novoUsuario(usuario);
+    }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/editarUsuario")
+    public String editarUsuario(Usuario usuario) {
+        return ejb.editarUsuario(usuario);
     }
 
 }
